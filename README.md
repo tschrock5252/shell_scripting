@@ -33,7 +33,7 @@ This is a base which provides a good foundation for shell scripting. There are f
  - MAIN_SCRIPT_FUNCTION - This is a function where all of the primary script logic can be defined.
  - FINISH - This function cleans up log files upon script exit and releases the lock which was created in the SETUP_LOCK function. 
 
-#### script_base_no_flock.sh
+#### script_base_without_flock.sh
 
 This is a base which provides a good foundation for shell scripting. This script also works without flock. There are four functions defined in total:
 
