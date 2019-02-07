@@ -29,7 +29,7 @@ Step 4) git pull origin master
 This is a base which provides a good foundation for shell scripting. There are four functions defined in total:
 
  - DEFINE_VARIABLES - This function can be used to define variables throughout the entire script.
- - SETUP_LOCK - This function defines a lock using flock in /var/lock/script_name.lock which stops script from running on top of itself. This is useful when executing via cron.
+ - SETUP_LOCK - This function defines a lock using flock in /var/lock/script_name.lock which stops this script from running on top of itself. This is useful when executing via cron.
  - MAIN_SCRIPT_FUNCTION - This is a function where all of the primary script logic can be defined.
  - FINISH - This function cleans up log files upon script exit and releases the lock which was created in the SETUP_LOCK function. 
 
