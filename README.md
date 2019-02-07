@@ -19,7 +19,7 @@ Step 2) On your local machine, move to a new folder to work within and create a 
 
 Step 3) Add a new origin using the following command: git remote add origin git@github.com:your_username/shell_scripting.git
 
-Step 4) git pull
+Step 4) git pull origin master
 ```
 
 ### Scripts
