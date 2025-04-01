@@ -1,33 +1,42 @@
 #!/bin/bash
+set -euo pipefail
 
-# Set up local script variables
-    function DEFINE_VARIABLES {
-        TODAYS_DATE=$(date +"%m-%d-%Y");
-    }
+# Set up global variables
+script_file_name=$(basename "$0" | sed 's/\..*$//')
+lock_dir="${LOCK_DIR:-/tmp}"
+lock_file="${lock_dir}/${script_file_name}.lock"
+log_file="/tmp/${script_file_name}_$$.log"
 
-# Set up a lock to prevent this script from running on top of itself if executed via cron
-    function SETUP_LOCK {
-        SCRIPT_FILE_NAME=`echo $(basename $0) | sed 's/\..*$//'`;
-        LOCK_FILE=/var/lock/$SCRIPT_FILE_NAME.lock;
-        touch $LOCK_FILE;
-        read lastPID < $LOCK_FILE;
-        [ ! -z "$lastPID" -a -d /proc/$lastPID ] && echo "" && echo "# There is another copy of this script currently running. Exiting now for safety purposes." && exit 1
-        echo $BASHPID > $LOCK_FILE;
-    }
+# Function to acquire lock using PID file
+acquire_lock() {
+    if [ -e "$lock_file" ]; then
+        local existing_pid
+        existing_pid=$(cat "$lock_file")
+        if [ -n "$existing_pid" ] && kill -0 "$existing_pid" 2>/dev/null; then
+            echo "ERROR: Another instance of this script (PID $existing_pid) is running. Exiting." >&2
+            exit 1
+        else
+            echo "Stale lock file found. Removing." >&2
+            rm -f "$lock_file"
+        fi
+    fi
 
-# Define the script exit function to clean up
-    function FINISH {
-        [ -e /tmp/$$.log ] && rm /tmp/$$.log; # This isn't currently used. But it's a placeholder for a log file
-    }
-    trap FINISH EXIT
+    echo "$$" > "$lock_file"
+}
 
-# Define the main script function
-    function MAIN_SCRIPT_FUNCTION {
-        :
-    }
-    
-# Call all of the script functions
-    DEFINE_VARIABLES
-    SETUP_LOCK
-    MAIN_SCRIPT_FUNCTION
+# Function to release the lock and cleanup
+release_lock() {
+    [ -e "$log_file" ] && rm -f "$log_file"
+    [ -e "$lock_file" ] && rm -f "$lock_file"
+}
+trap release_lock EXIT
+
+# Main script logic placeholder
+main_script_function() {
+    :
+}
+
+# Run the script
+acquire_lock
+main_script_function
 
