@@ -8,7 +8,7 @@ lock_file="${lock_dir}/${script_file_name}.lock"
 log_file="/tmp/${script_file_name}_$$.log"
 
 # Function to acquire lock using PID file
-acquire_lock() {
+setup_lock() {
     if [ -e "$lock_file" ]; then
         local existing_pid
         existing_pid=$(cat "$lock_file")
@@ -37,6 +37,6 @@ main_script_function() {
 }
 
 # Run the script
-acquire_lock
+setup_lock
 main_script_function
 
